@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ugc-sprint-1"
+version = "0.1.0"
+description = ""
+authors = ["mishastik78 <mishastik78@yande.ru>"]
+readme = "README.md"
+packages = [{include = "ugc_sprint_1"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^1.10.2"
+clickhouse-driver = "^0.2.4"
+kafka-python = "^2.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
