@@ -8,7 +8,7 @@ from config import Settings
 settings = Settings()
 consumer = kafka.KafkaConsumer(
     settings.kafka_topic_name,
-    client_id=settings.kafka_name,
+    client_id=settings.kafka_client_id,
     bootstrap_servers=settings.kafka_instance,
     group_id='etl',
     auto_offset_reset='earliest',

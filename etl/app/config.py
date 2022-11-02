@@ -2,7 +2,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    kafka_name: str
+    kafka_client_id: str
     kafka_instance: str
     kafka_topic_name: str
     kafka_timeout_ms: int
