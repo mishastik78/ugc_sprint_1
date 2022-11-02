@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     app_name: str = 'Player timestamp receiver'
     docs_url: str = '/api/openapi'
     openapi_url: str = '/api/openapi.json'
-    kafka_name: str
+    kafka_client_id: str
     kafka_instance: str
     kafka_topic_name: str
     auth_url: str

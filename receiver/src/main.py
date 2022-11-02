@@ -24,7 +24,7 @@ app = FastAPI(
 async def startup_event():
     kafka.producer = AIOKafkaProducer(
         loop=loop,
-        client_id=settings.kafka_name,
+        client_id=settings.kafka_client_id,
         bootstrap_servers=settings.kafka_instance
     )
     await kafka.producer.start()
