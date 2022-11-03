@@ -1,11 +1,13 @@
+import logging
 from time import sleep
 
 import clickhouse_driver
 import kafka
 
-from config import Settings
+from config import settings
+from decorators import backoff
 
-settings = Settings()
+logging.basicConfig(level=logging.ERROR)
 consumer = kafka.KafkaConsumer(
     settings.kafka_topic_name,
     client_id=settings.kafka_client_id,
@@ -14,6 +16,7 @@ consumer = kafka.KafkaConsumer(
     auto_offset_reset='earliest',
     enable_auto_commit=False,
     consumer_timeout_ms=settings.kafka_timeout_ms,
+    reconnect_backoff_ms=50,
 )
 clickhouse = clickhouse_driver.Client(host=settings.clickhouse_host)
 
@@ -22,6 +25,11 @@ def read_kafka():
     for msg in consumer:
         user, _, film = msg.key.partition('+')
         yield user, film, msg.value
+
+
+@backoff
+def clickhouse_insert(payload):
+    return clickhouse.execute('INSERT INTO film_views (user_id, film_id, timestamp) VALUES (%s, %s, %s)', payload)
 
 
 def proceed():
@@ -34,7 +42,7 @@ def proceed():
             if count > settings.kafka_max_messages:
                 break
         if payload:
-            clickhouse.execute('INSERT INTO film_views (user_id, film_id, timestamp) VALUES (%s, %s, %s)', payload)
+            clickhouse_insert(payload)
             consumer.commit()
             del payload
         else:
